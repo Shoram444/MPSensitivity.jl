@@ -1,0 +1,13 @@
+name = "MPSensitivity"
+uuid = "92736961-4cfe-4353-ac4c-a63be40432dc"
+authors = ["Maros Petro"]
+version = "0.1.0"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[compat]
+julia = "1"
+
+[targets]
+test = ["Test"]
