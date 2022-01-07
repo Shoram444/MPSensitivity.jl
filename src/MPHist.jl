@@ -1,13 +1,13 @@
 
 """
-	get_bin_content(h2d, h2dName, Emin, Emax)
+	get_bin_content(inFile, h2dName, Emin, Emax)
 
 Description of ```get_bin_content```
 ------------------------------
 Provides bin content in the specified energy range.
 
 Arguments:
-	+ h2d 		- The ROOTFile of the 2d histogram
+	+ inFile 	- The ROOTFile of the 2d histogram
 	+ h2dName 	- The name of the Th2F. Provided as string. (e.g. "h")
 	+ Emin 		- Minimum energy of the deisred E range
 	+ Emax      - Maximum energy of the deisred E range
@@ -20,9 +20,9 @@ To find bin content n at E ∈ (500, 600): n = ```get_bin_content(f, "h2", 500, 
 
 FUNCTION ONLY WORKS IF THE HISTOGRAM IS SQUARE - meaning it has the same number of bins on x and y axes.
 """
-function get_bin_content(h2d, h2dName, Emin, Emax)
-	nbins = h2d[h2dName][:fXaxis_fNbins]
-	binsize = h2d[h2dName][:fXaxis_fXmax] / nbins
+function get_bin_content(inFile, h2dName, Emin, Emax)
+	nbins = inFile[h2dName][:fXaxis_fNbins]
+	binsize = inFile[h2dName][:fXaxis_fXmax] / nbins
 
 	row = floor(Emax/binsize) - 1
 	col = floor(Emin/binsize) + 1
@@ -36,7 +36,7 @@ function get_bin_content(h2d, h2dName, Emin, Emax)
 	=#
 	idx = convert(Int64, 3 + nbins + (nbins+2)*row + col)
 
-	bincontent = h2d[h2dName][:fN][idx]
+	bincontent = inFile[h2dName][:fN][idx]
 	return convert(Float64, bincontent)
 end
 
