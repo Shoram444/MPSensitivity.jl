@@ -9,7 +9,7 @@ Arguments:
 
 see also get_best_ROI(r, Emins, Emaxs)
 """
-function get_best_ROI_index(r::Matrix{Float64})
+function get_best_ROI_index(r::Matrix{<:Real})
     return (argmax(r)[2], argmax(r)[1]) 
 end
 
@@ -25,7 +25,7 @@ Arguments:
 
 see also get_best_ROI(r, Emins, Emaxs)
 """
-function get_best_ROI_index(r::Vector{Real})
+function get_best_ROI_index(r::Vector{<:Real})
     return (argmax(r)) 
 end
 
@@ -42,7 +42,7 @@ Arguments:
 + Emaxs: array of Energies E_max
 
 """
-function get_best_ROI(r::Vector{Real}, Emins::Vector{Real}, Emaxs::Vector{Real})
+function get_best_ROI(r::Vector{<:Real}, Emins::Vector{<:Real}, Emaxs::Vector{<:Real})
     return (Emins[argmax(r)], Emaxs[argmax(r)])
 end
 
@@ -60,7 +60,7 @@ Arguments:
 + Emaxs: array of Energies E_max
 
 """
-function get_best_ROI(r::Matrix{Float64}, Emins::Vector{Real}, Emaxs::Vector{Real})
+function get_best_ROI(r::Matrix{<:Float64}, Emins::Vector{<:Real}, Emaxs::Vector{<:Real})
     if (Emins[argmax(r)[1]] < Emaxs[argmax(r)[2]])
         return (Emins[argmax(r)[1]], Emaxs[argmax(r)[2]])
     else
