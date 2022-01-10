@@ -4,6 +4,7 @@ using UnROOT
 
 include("MPHist.jl")
 export get_bin_content
+export MP_heatmap
 
 include("MPEfficiency.jl")
 export get_efficiency
