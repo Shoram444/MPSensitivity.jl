@@ -40,3 +40,44 @@ function get_bin_content(inFile, h2dName, Emin, Emax)
 	return convert(Float64, bincontent)
 end
 
+"""
+	MP_heatmap( xTicks::Vector{<:Float64}, yTicks::Vector{<:Float64}, data::Vector{<:Float64}, stepSize = 100 )
+
+Description of ```MP_heatmap```
+------------------------------
+Returns a Plots.heatmap object when provided 3 arrays x,y,z. Where x,y are the axes and z is the color of the cell. 
+
+Arguments:
+	+ xTicks 	- Vector x values associated with z values. Works with dataframe columns. Can be provided as eg. "df.EMins". 
+	+ yTicks 	- Vector y values associated with z values. Works with dataframe columns. Can be provided as eg. "df.EMaxs". 
+	+ data 		- Values for the z axis / color. Works with dataframe columns. Can be provided as eg. "df.NPassed". 
+-------------------------------
+Example use:
+hm = MP_heatmap( df.EMins, df.EMaxs, df.NPassed)
+
+"""
+function MP_heatmap( xTicks::Vector{<:Float64}, yTicks::Vector{<:Float64}, data::Vector{<:Float64}, stepSize = 100 )
+	dataMatrix = zeros( 
+						length(unique(yTicks)), 
+						length(unique(xTicks))
+					  )
+
+	for d in 1:length(data)
+		if ( length(data) != length(xTicks) || length(data) != length(yTicks))
+			error("Arrays must be the same size!")
+		end
+
+		r = convert(Int, yTicks[d]/stepSize + 1) # gives row index 
+		c = convert(Int, xTicks[d]/stepSize + 1) # gives row index 
+
+		dataMatrix[r,c] = data[d]
+	end
+
+	x 	= unique(xTicks)
+	y 	= unique(yTicks)
+	hm 	= heatmap(x,y,dataMatrix)
+
+	return hm
+end
+
+
