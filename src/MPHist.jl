@@ -41,7 +41,7 @@ function get_bin_content(inFile, h2dName, Emin, Emax)
 end
 
 """
-	MP_heatmap( xTicks::Vector{<:Float64}, yTicks::Vector{<:Float64}, data::Vector{<:Float64}, stepSize = 100 )
+	MP_heatmap( xTicks::Vector{<:Real}, yTicks::Vector{<:Real}, data::Vector{<:Real}, stepSize = 100 )
 
 Description of ```MP_heatmap```
 ------------------------------
@@ -56,11 +56,14 @@ Example use:
 hm = MP_heatmap( df.EMins, df.EMaxs, df.NPassed)
 
 """
-function MP_heatmap( xTicks::Vector{<:Float64}, yTicks::Vector{<:Float64}, data::Vector{<:Float64}, stepSize = 100 )
+function MP_heatmap( xTicks::Vector{<:Real}, yTicks::Vector{<:Real}, data::Vector{<:Real}, stepSize = 100; kwargs... )
 	dataMatrix = zeros( 
 						length(unique(yTicks)), 
 						length(unique(xTicks))
 					  )
+
+	x 	= unique(xTicks)
+	y 	= unique(yTicks)
 
 	for d in 1:length(data)
 		if ( length(data) != length(xTicks) || length(data) != length(yTicks))
@@ -73,9 +76,19 @@ function MP_heatmap( xTicks::Vector{<:Float64}, yTicks::Vector{<:Float64}, data:
 		dataMatrix[r,c] = data[d]
 	end
 
-	x 	= unique(xTicks)
-	y 	= unique(yTicks)
-	hm 	= heatmap(x,y,dataMatrix)
+	## checks if kwargs are provided
+    if length(kwargs) == 0                ## if no kwargs are provided, use my default theme
+        hm = Plots.heatmap(x,y,dataMatrix)
+
+    else                                  ## if there are kwargs, they are unpacked using keys() 
+        kwarg_names = keys(kwargs)        ## and iterated over to change the default dictionary <plot_args>
+		
+        for key in kwarg_names
+            plot_args[key] = kwargs[key]
+        end
+
+        hm = Plots.heatmap(x,y,dataMatrix; plot_args...)
+    end
 
 	return hm
 end
