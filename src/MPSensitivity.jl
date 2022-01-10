@@ -1,6 +1,6 @@
 module MPSensitivity
 
-using UnROOT
+using UnROOT, Plots
 
 include("MPHist.jl")
 export get_bin_content
