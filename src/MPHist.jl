@@ -76,19 +76,7 @@ function MP_heatmap( xTicks::Vector{<:Real}, yTicks::Vector{<:Real}, data::Vecto
 		dataMatrix[r,c] = data[d]
 	end
 
-	## checks if kwargs are provided
-    if length(kwargs) == 0                ## if no kwargs are provided, use my default theme
-        hm = Plots.heatmap(x,y,dataMatrix)
-
-    else                                  ## if there are kwargs, they are unpacked using keys() 
-        kwarg_names = keys(kwargs)        ## and iterated over to change the default dictionary <plot_args>
-		
-        for key in kwarg_names
-            plot_args[key] = kwargs[key]
-        end
-
-        hm = Plots.heatmap(x,y,dataMatrix; plot_args...)
-    end
+	hm = Plots.heatmap(x,y,dataMatrix; kwargs...)
 
 	return hm
 end
