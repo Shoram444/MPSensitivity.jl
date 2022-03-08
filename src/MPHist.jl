@@ -41,16 +41,18 @@ function get_bin_content(inFile, h2dName, Emin, Emax)
 end
 
 """
-	MP_heatmap( xTicks::Vector{<:Real}, yTicks::Vector{<:Real}, data::Vector{<:Real}, stepSize = 100 )
+	`MP_heatmap( xTicks::Vector{<:Real}, yTicks::Vector{<:Real}, data::Vector{<:Real}, stepSize = 100 )``
 
-Description of ```MP_heatmap```
+Description of `MP_heatmap`
 ------------------------------
 Returns a Plots.heatmap object when provided 3 arrays x,y,z. Where x,y are the axes and z is the color of the cell. 
 
 Arguments:
-	+ xTicks 	- Vector x values associated with z values. Works with dataframe columns. Can be provided as eg. "df.EMins". 
-	+ yTicks 	- Vector y values associated with z values. Works with dataframe columns. Can be provided as eg. "df.EMaxs". 
-	+ data 		- Values for the z axis / color. Works with dataframe columns. Can be provided as eg. "df.NPassed". 
+
+	xTicks 	- Vector x values associated with z values. Works with dataframe columns. Can be provided as eg. "df.EMins". 
+	yTicks 	- Vector y values associated with z values. Works with dataframe columns. Can be provided as eg. "df.EMaxs". 
+	data 		- Values for the z axis / color. Works with dataframe columns. Can be provided as eg. "df.NPassed". 
+	
 -------------------------------
 Example use:
 hm = MP_heatmap( df.EMins, df.EMaxs, df.NPassed)
