@@ -52,35 +52,53 @@ Arguments:
 	xTicks 	- Vector x values associated with z values. Works with dataframe columns. Can be provided as eg. "df.EMins". 
 	yTicks 	- Vector y values associated with z values. Works with dataframe columns. Can be provided as eg. "df.EMaxs". 
 	data 		- Values for the z axis / color. Works with dataframe columns. Can be provided as eg. "df.NPassed". 
-	
+
 -------------------------------
 Example use:
 hm = MP_heatmap( df.EMins, df.EMaxs, df.NPassed)
 
 """
 function MP_heatmap( xTicks::Vector{<:Real}, yTicks::Vector{<:Real}, data::Vector{<:Real}, stepSize = 100; kwargs... )
-	dataMatrix = zeros( 
-						length(unique(yTicks)), 
-						length(unique(xTicks))
-					  )
+    dataMatrix = zeros( 
+                        length(unique(yTicks)), 
+                        length(unique(xTicks))
+                        )
+    if ( unique(xTicks)[1] <= 0 )
+        x  = unique(xTicks) .+ stepSize/2   # x specifies the midpoints of the bins 
+    else
+        x  = unique(xTicks) .- stepSize/2   # x specifies the midpoints of the bins 
+    end
+    
+    if ( unique(yTicks)[1] <= 0 )
+        y  = unique(yTicks) .+ stepSize/2   # y specifies the midpoints of the bins 
+    else
+        y  = unique(yTicks) .- stepSize/2   # y specifies the midpoints of the bins 
+    end
+    
+    for d in 1:length(data)  # each data point is mapped onto the matrix, where row and col are specified
+        if ( length(data) != length(xTicks) || length(data) != length(yTicks))
+            error("Arrays must be the same size!")
+        end
+        
+        if (yTicks[1] <= 0) # since Julia indexing starts from 1, we must add 1 if row was to be 0
+            r = convert(Int, yTicks[d]/stepSize + 1) # gives row index 
+        else
+            r = convert(Int, yTicks[d]/stepSize ) # gives row index 
+        end
+        
+        if (xTicks[1] <= 0) # since Julia indexing starts from 1, we must add 1 if col was to be 0
+            c = convert(Int, xTicks[d]/stepSize + 1) # gives row index 
+        else
+            c = convert(Int, xTicks[d]/stepSize ) # gives row index 
+        end
+        
+        dataMatrix[r,c] = data[d]
+    end
+    dataMatrix = replace!(dataMatrix, 0.0 => NaN)
 
-	x 	= unique(xTicks)
-	y 	= unique(yTicks)
+    hm = Plots.heatmap(x,y,dataMatrix; kwargs...)
 
-	for d in 1:length(data)
-		if ( length(data) != length(xTicks) || length(data) != length(yTicks))
-			error("Arrays must be the same size!")
-		end
-
-		r = convert(Int, yTicks[d]/stepSize + 1) # gives row index 
-		c = convert(Int, xTicks[d]/stepSize + 1) # gives row index 
-
-		dataMatrix[r,c] = data[d]
-	end
-
-	hm = Plots.heatmap(x,y,dataMatrix; kwargs...)
-
-	return hm
+    return hm
 end
 
 
