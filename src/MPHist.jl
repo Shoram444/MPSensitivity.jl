@@ -102,3 +102,35 @@ function MP_heatmap( xTicks::Vector{<:Real}, yTicks::Vector{<:Real}, data::Vecto
 end
 
 
+"""
+Function borrowed and slightly changed from UnROOT.jl
+
+Returns 2d Heatmap when TH1D/TH2D object is passed. 
+
+Example use:
+f =  ROOTFile("82Se_2ubb_SpectrumG0.root")
+th = f["h2"] ; where h2 is the name of the TH2D object from root. 
+MP_heatmap(th).
+"""
+function MP_heatmap(th::Dict{Symbol, Any})
+    xmin = th[:fXaxis_fXmin]
+    xmax = th[:fXaxis_fXmax]
+    xnbins = th[:fXaxis_fNbins]
+    xbins = isempty(th[:fXaxis_fXbins]) ? range(xmin, xmax, length=xnbins+1) : th[:fXaxis_fXbins];
+    counts = th[:fN]
+
+    if th[:fYaxis_fNbins] > 1
+        ymin = th[:fYaxis_fXmin]
+        ymax = th[:fYaxis_fXmax]
+        ynbins = th[:fYaxis_fNbins]
+        
+        ybins = isempty(th[:fYaxis_fXbins]) ? range(ymin, ymax, length=ynbins+1) : th[:fYaxis_fXbins];
+        
+        counts = reshape(counts, (xnbins+2, ynbins+2))[2:end-1, 2:end-1]   # matrix with dimensions (xnbins, ynbins) and values of the individual bin counts
+        edges = (xbins, ybins)
+    else
+        counts = counts[2:end-1]
+        edges = (xbins,)
+    end
+    return Plots.heatmap(StatsBase.Histogram(edges, counts), nbins = (xbins, ybins))
+end
