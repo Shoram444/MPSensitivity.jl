@@ -112,7 +112,7 @@ f =  ROOTFile("82Se_2ubb_SpectrumG0.root")
 th = f["h2"] ; where h2 is the name of the TH2D object from root. 
 MP_heatmap(th).
 """
-function MP_heatmap(th::Dict{Symbol, Any})
+function MP_heatmap(th::Dict{Symbol, Any}; kwargs...)
     xmin = th[:fXaxis_fXmin]
     xmax = th[:fXaxis_fXmax]
     xnbins = th[:fXaxis_fNbins]
@@ -132,5 +132,5 @@ function MP_heatmap(th::Dict{Symbol, Any})
         counts = counts[2:end-1]
         edges = (xbins,)
     end
-    return Plots.heatmap(StatsBase.Histogram(edges, counts), nbins = (xbins, ybins))
+    return Plots.heatmap(StatsBase.Histogram(edges, counts), nbins = (xbins, ybins), ; kwargs...)
 end
